@@ -3,6 +3,7 @@ See LICENSE folder for this sample’s licensing information.
 
 Abstract:
 Management of the UI steps for scanning an object in the main view controller.
+ 
 */
 
 import Foundation
@@ -16,6 +17,7 @@ extension ViewController {
         case notReady
         case scanning
         case testing
+        case communicating
     }
     
     /// - Tag: ARObjectScanningConfiguration
@@ -59,6 +61,8 @@ extension ViewController {
                     print("Error: Scan is not ready to be tested.")
                     return
                 }
+            case .communicating:
+                break
             }
             
             // 2. Apply changes as needed per state.
@@ -74,8 +78,12 @@ extension ViewController {
                 instructionsVisible = false
                 showBackButton(false)
                 nextButton.isEnabled = false
-                loadModelButton.isHidden = true
+                nextButton.isHidden = false
+                loadModelButton.isHidden = false
+                speechButton.isHidden = true
                 flashlightButton.isHidden = true
+                shareButton.isHidden = true
+                nextButton.setImage(nil, for: .normal)
                 
                 // Make sure the SCNScene is cleared of any SCNNodes from previous scans.
                 sceneView.scene = SCNScene()
@@ -90,8 +98,10 @@ extension ViewController {
                 scan = nil
                 testRun = nil
                 self.setNavigationBarTitle("")
-                loadModelButton.isHidden = true
+                loadModelButton.isHidden = false
                 flashlightButton.isHidden = true
+                speechButton.isHidden = true
+                shareButton.isHidden = true
                 showBackButton(false)
                 nextButton.isEnabled = false
                 nextButton.setTitle("Next", for: [])
@@ -110,14 +120,29 @@ extension ViewController {
                 print("State: Testing")
                 self.setNavigationBarTitle("Test")
                 loadModelButton.isHidden = true
-                flashlightButton.isHidden = false
+                flashlightButton.isHidden = true
+                speechButton.isHidden = true
+                shareButton.isHidden = false
+                shareButton.setTitle("Share", for: [])
                 showMergeScanButton()
-                nextButton.isEnabled = true
-                nextButton.setTitle("Share", for: [])
+                nextButton.isHidden = false
+                nextButton.isEnabled = false
+                nextButton.setTitle("Communicate", for: [])
                 
                 testRun = TestRun(sceneView: sceneView)
                 testObjectDetection()
                 cancelMaxScanTimeTimer()
+            case .communicating:
+                print("State: Communicating")
+                self.setNavigationBarTitle("Commuication")
+                loadModelButton.isHidden = true
+                flashlightButton.isHidden = true
+                nextButton.isHidden = true
+                shareButton.isHidden = true
+                speechButton.isHidden = false
+                speechRecognizer = SpeechRecognizer(sceneView: sceneView)
+                
+                
             }
             
             NotificationCenter.default.post(name: ViewController.appStateChangedNotification,
@@ -138,7 +163,7 @@ extension ViewController {
                 self.setNavigationBarTitle("Ready to scan")
                 self.showBackButton(false)
                 self.nextButton.setTitle("Next", for: [])
-                self.loadModelButton.isHidden = true
+                self.loadModelButton.isHidden = false
                 self.flashlightButton.isHidden = true
                 if scan.ghostBoundingBoxExists {
                     self.displayInstruction(Message("Tap 'Next' to create an approximate bounding box around the object you want to scan."))
@@ -208,6 +233,9 @@ extension ViewController {
         case .testing:
             state = .scanning
             scan?.state = .adjustingOrigin
+        case .communicating:
+            state = .testing
+    
         }
     }
     
@@ -231,8 +259,11 @@ extension ViewController {
                 }
             }
         case .testing:
-            // Testing is the last state, show the share sheet at the end.
-            createAndShareReferenceObject()
+            state = .communicating
+        case .communicating:
+            //begin to talk
+            // Communicating is the last state
+            break
         }
     }
     

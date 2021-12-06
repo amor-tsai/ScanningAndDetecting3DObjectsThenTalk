@@ -26,6 +26,18 @@ class SpeechRecognizer{
     // The audio engine used to record input from the microphone.
     private let audioEngine = AVAudioEngine()
     
+    private var pressDown: Bool = false {
+        willSet(newValue){
+            if newValue != pressDown {
+                if newValue {
+                    startRecording()
+                } else {
+                    stopRecording()
+                }
+            }
+        }
+    }
+    
     var spokenText = "" {
         willSet(newValue) {
             print("spokenText: \(spokenText)")
@@ -40,7 +52,7 @@ class SpeechRecognizer{
     }
     
     // MARK: SFAudioTranscription
-    func startRecording() {
+    private func startRecording() {
         // setup recongizer
         guard speechRecogniser.isAvailable else {
             // Speech recognition is unavailable, so do not attempt to start.
@@ -116,21 +128,24 @@ class SpeechRecognizer{
         }
     }
     
-    func stopRecording() {
+    private func stopRecording() {
         if audioEngine.isRunning{
             audioEngine.stop()
             recognitionRequest?.endAudio()
         }
     }
     
-    func didLongPress(_ gesture: UILongPressGestureRecognizer) {
-        print("startRecording didLongPress")
-        startRecording()
+    // when a long press gesture is recognized, call this method.
+    func start() {
+        print("startRecording")
+        // I use this in place of startRecording, because long press gesture recognizer will call this method multiple times
+        pressDown = true
     }
     
-    func didTap(_ gesture: UITapGestureRecognizer) {
-        print("stopRecording didTap")
-        stopRecording()
+    func stop() {
+        print("stopRecording ")
+        pressDown = false
+        ViewController.instance?.displayMessage(self.spokenText, expirationTime: 10)
     }
     
     

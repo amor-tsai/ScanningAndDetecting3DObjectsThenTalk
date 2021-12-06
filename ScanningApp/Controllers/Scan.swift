@@ -348,7 +348,7 @@ class Scan {
                     timeOfLastReferenceObjectCreation = now
                     isBusyCreatingReferenceObject = true
                     sceneView.session.createReferenceObject(transform: boundingBox.simdWorldTransform,
-                                                            center: float3(),
+                                                            center: SIMD3<Float>(),
                                                             extent: boundingBox.extent) { object, error in
                         if let referenceObject = object {
                             // Pass the feature points to the point cloud visualization.
@@ -418,7 +418,7 @@ class Scan {
         // Extract the reference object based on the position & orientation of the bounding box.
         sceneView.session.createReferenceObject(
             transform: boundingBox.simdWorldTransform,
-            center: float3(), extent: boundingBox.extent,
+            center: SIMD3<Float>(), extent: boundingBox.extent,
             completionHandler: { object, error in
                 if let referenceObject = object {
                     // Adjust the object's origin with the user-provided transform.

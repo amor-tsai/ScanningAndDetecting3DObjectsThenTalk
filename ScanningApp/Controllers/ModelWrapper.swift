@@ -14,7 +14,7 @@ protocol ModelWrapperDelegate: AnyObject{
     func predictionWillChange(value:String)
 }
 
-class ModelWrapper: NSObject{
+class ModelWrapper{
     
     weak var delegate: ModelWrapperDelegate?
     

@@ -38,6 +38,7 @@ class MessageLabel: UILabel {
     
     func display(_ message: Message) {
         DispatchQueue.main.async {
+            self.layer.cornerRadius = 15
             self.attributedText = message.text
             self.isHidden = false
         }

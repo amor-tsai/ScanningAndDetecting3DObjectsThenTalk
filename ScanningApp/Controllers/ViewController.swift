@@ -3,6 +3,12 @@ See LICENSE folder for this sample’s licensing information.
 
 Abstract:
 Main view controller for the object scanning UI.
+ 
+ 
+ Start project from https://developer.apple.com/documentation/arkit/content_anchors/scanning_and_detecting_3d_objects
+ I use it for AR object capturing.
+ One of the reason I use it is because the interface and animation are cool and intuitive. In addition, I also like its way of organizing the codes
+ 
 */
 
 import UIKit
@@ -29,6 +35,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @IBOutlet weak var sessionInfoView: UIVisualEffectView!
     @IBOutlet weak var sessionInfoLabel: UILabel!
     @IBOutlet weak var toggleInstructionsButton: RoundedButton!
+    @IBOutlet weak var shareButton: ShareButton!
+    @IBOutlet weak var speechButton: SpeechButton!
     
     internal var internalState: State = .startARSession
     
@@ -38,6 +46,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var referenceObjectToTest: ARReferenceObject?
     
     internal var testRun: TestRun?
+    internal var speechRecognizer: SpeechRecognizer?
     
     internal var messageExpirationTimer: Timer?
     internal var startTimeOfLastMessage: TimeInterval?
@@ -108,6 +117,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         setupNavigationBar()
         
+        // if the phone is in low power mode, display the warning
         displayWarningIfInLowPowerMode()
         
         // Make sure the application launches in .startARSession state.
@@ -201,6 +211,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
     }
     
+    // display directory when touching up the load model button
     @IBAction func loadModelButtonTapped(_ sender: Any) {
         guard !loadModelButton.isHidden && loadModelButton.isEnabled else { return }
         
@@ -223,6 +234,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             loadModelButtonTapped(self)
         } else if !flashlightButton.isHidden {
             toggleFlashlightButtonTapped(self)
+        } else if !shareButton.isHidden {
+            toggleShareButtonTapped(self)
+        }
+    }
+    
+    @IBAction func nextButtonTouchAreaTapped(_ sender: Any) {
+        // A tap in the extended hit area on the lower left should cause a tap
+        //  on the button that is currently visible at that location.
+        if !nextButton.isHidden {
+            nextButtonTapped(self)
+        } else if !speechButton.isHidden {
+            toggleSpeechButtonTapped(self)
+        }
+    }
+    
+    @IBAction func nextButtonToucheAreaTouchedDown(_ sender: Any) {
+        // A touched down in the extended hit area on the lower left should cause a tap
+        //  on the button that is currently visible at that location.
+        if !speechButton.isHidden {
+            toggleSpeechButtonTouchedDown(self)
         }
     }
     
@@ -234,6 +265,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @IBAction func toggleInstructionsButtonTapped(_ sender: Any) {
         guard !toggleInstructionsButton.isHidden && toggleInstructionsButton.isEnabled else { return }
         instructionsVisible.toggle()
+    }
+    
+    @IBAction func toggleShareButtonTapped(_ sender: Any) {
+        guard !shareButton.isHidden && shareButton.isEnabled else {return }
+        createAndShareReferenceObject()
+    }
+    
+    @IBAction func toggleSpeechButtonTouchedDown(_ sender:Any) {
+        guard !speechButton.isHidden && speechButton.isEnabled else {return }
+        speechButton.toggledOn = true
+        speechRecognizer?.start()
+    }
+    
+    @IBAction func toggleSpeechButtonTapped(_ sender:Any) {
+        guard !speechButton.isHidden && speechButton.isEnabled else {return }
+        speechButton.toggledOn = false
+        speechRecognizer?.stop()
     }
     
     func displayInstruction(_ message: Message) {
@@ -336,7 +384,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             }
             
             // Initiate a share sheet for the scanned object
-            let airdropShareSheet = ShareScanViewController(sourceView: self.nextButton, sharedObject: documentURL)
+            let airdropShareSheet = ShareScanViewController(sourceView: self.shareButton, sharedObject: documentURL)
             DispatchQueue.main.async {
                 self.present(airdropShareSheet, animated: true, completion: nil)
             }
@@ -403,7 +451,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             switch state {
             case .startARSession:
                 state = .notReady
-            case .notReady, .testing:
+            case .notReady, .testing, .communicating:
                 break
             case .scanning:
                 if let scan = scan {
@@ -438,7 +486,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             switch state {
             case .startARSession, .notReady:
                 state = .scanning
-            case .scanning, .testing:
+            case .scanning, .testing, .communicating:
                 break
             }
         }
@@ -452,8 +500,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let objectAnchor = anchor as? ARObjectAnchor {
+            // ARObject is detected
             if let testRun = self.testRun, objectAnchor.referenceObject == testRun.referenceObject {
                 testRun.successfulDetection(objectAnchor)
+                // we can communicate with this ARObject
+                DispatchQueue.main.sync {
+                    nextButton.isEnabled = true
+                }
                 let messageText = """
                     Object successfully detected from this angle.
 
@@ -597,4 +650,5 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         return true
     }
+    
 }
