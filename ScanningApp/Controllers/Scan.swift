@@ -169,6 +169,8 @@ class Scan {
                 scannedObject.boundingBox?.updateSidePlaneDrag(screenPos: gesture.location(in: sceneView))
             case .failed, .cancelled, .ended:
                 scannedObject.boundingBox?.endSidePlaneDrag()
+            @unknown default:
+                break
             }
         } else if state == .adjustingOrigin {
             switch gesture.state {
@@ -180,6 +182,8 @@ class Scan {
                 scannedObject.origin?.updateAxisDrag(screenPos: gesture.location(in: sceneView))
             case .failed, .cancelled, .ended:
                 scannedObject.origin?.endAxisDrag()
+            @unknown default:
+                break
             }
         }
     }
@@ -205,6 +209,8 @@ class Scan {
                 break
             case .failed, .cancelled, .ended:
                 scannedObject.boundingBox?.endGroundPlaneDrag()
+            @unknown default:
+                break
             }
         } else if state == .adjustingOrigin {
             switch gesture.state {
@@ -222,6 +228,8 @@ class Scan {
                 break
             case .failed, .cancelled, .ended:
                 scannedObject.origin?.endPlaneDrag()
+            @unknown default:
+                break
             }
         }
     }
@@ -257,6 +265,8 @@ class Scan {
                 scannedObject.boundingBox?.updateSideDrag(screenPos: gesture.location(in: sceneView))
             case .failed, .cancelled, .ended:
                 scannedObject.boundingBox?.endSideDrag()
+            @unknown default:
+                break
             }
         } else if state == .adjustingOrigin {
             switch gesture.state {
@@ -268,6 +278,8 @@ class Scan {
                 scannedObject.origin?.updateAxisDrag(screenPos: gesture.location(in: sceneView))
             case .failed, .cancelled, .ended:
                 scannedObject.origin?.endAxisDrag()
+            @unknown default:
+                break
             }
         }
     }
@@ -304,6 +316,8 @@ class Scan {
                 break
             case .failed, .cancelled, .ended:
                 break
+            @unknown default:
+                break
             }
         } else if state == .adjustingOrigin {
             switch gesture.state {
@@ -313,6 +327,8 @@ class Scan {
                 scannedObject.origin?.updateScale(Float(gesture.scale))
                 gesture.scale = 1
             case .changed, .failed, .cancelled, .ended:
+                break
+            @unknown default:
                 break
             }
         }

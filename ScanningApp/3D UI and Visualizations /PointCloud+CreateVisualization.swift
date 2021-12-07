@@ -17,7 +17,7 @@ extension PointCloud {
     func createVisualization(for points: [SIMD3<Float>], color: UIColor, size: CGFloat) -> SCNGeometry? {
         guard !points.isEmpty else { return nil }
         
-        let stride = MemoryLayout<float3>.size
+        let stride = MemoryLayout<SIMD3<Float>>.size
         let pointData = Data(bytes: points, count: stride * points.count)
         
         // Create geometry source

@@ -14,6 +14,11 @@ import ARKit
 
 class SpeechRecognizer{
     // MARK: Properties
+    
+    static let recordingEndNotification = Notification.Name("RecordingEndNotification")
+    static let recordingEndUserInfo = "SpeechRecognizer.recordingEndUserInfo"
+    
+    
     // The speech recogniser used by the controller to record the user's speech.
     private let speechRecogniser = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
         
@@ -146,6 +151,10 @@ class SpeechRecognizer{
         print("stopRecording ")
         pressDown = false
         ViewController.instance?.displayMessage(self.spokenText, expirationTime: 10)
+        NotificationCenter.default.post(name: SpeechRecognizer.recordingEndNotification,
+                                        object: self,
+                                        userInfo: [SpeechRecognizer.recordingEndUserInfo: self.spokenText]
+        )
     }
     
     

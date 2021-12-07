@@ -11,6 +11,7 @@ import SceneKit
 extension ViewController: UIGestureRecognizerDelegate {
         
     @IBAction func didTap(_ gesture: UITapGestureRecognizer) {
+        print("gesture didTap")
         if state == .scanning {
             scan?.didTap(gesture)
         }
@@ -19,6 +20,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
     
     @IBAction func didOneFingerPan(_ gesture: UIPanGestureRecognizer) {
+        print("gesture didOneFingerPan")
         if state == .scanning {
             scan?.didOneFingerPan(gesture)
         }
@@ -27,6 +29,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
     
     @IBAction func didTwoFingerPan(_ gesture: ThresholdPanGestureRecognizer) {
+        print("gesture didTwoFingerPan")
         if state == .scanning {
             scan?.didTwoFingerPan(gesture)
         }
@@ -35,6 +38,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
     
     @IBAction func didRotate(_ gesture: ThresholdRotationGestureRecognizer) {
+        print("gesture didRotate")
         if state == .scanning {
             scan?.didRotate(gesture)
         }
@@ -43,6 +47,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
     
     @IBAction func didLongPress(_ gesture: UILongPressGestureRecognizer) {
+        print("gesture didPress")
         if state == .scanning {
             scan?.didLongPress(gesture)
         }
@@ -51,6 +56,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
     
     @IBAction func didPinch(_ gesture: ThresholdPinchGestureRecognizer) {
+        print("gesture didPinch")
         if state == .scanning {
             scan?.didPinch(gesture)
         }

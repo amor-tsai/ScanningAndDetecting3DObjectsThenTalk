@@ -7,16 +7,13 @@
 //
 
 import Foundation
+import ARKit
 
-// I set this protocol because I want to pass values to the viewController
-protocol ModelWrapperDelegate: AnyObject{
-    // if there will be a change in the prediction, then this method is called
-    func predictionWillChange(value:String)
-}
 
 class ModelWrapper{
     
-    weak var delegate: ModelWrapperDelegate?
+    static let predictionNotification = Notification.Name("PredictionNotification")
+    static let notificationUserInfo = "ModelWrapperNotificationUserInfo"
     
     // Model Server address
     private var serverURL = ""
@@ -28,8 +25,8 @@ class ModelWrapper{
     private var session: URLSession = {
         let sessionConfig = URLSessionConfiguration.ephemeral
         
-        sessionConfig.timeoutIntervalForRequest = 20.0
-        sessionConfig.timeoutIntervalForResource = 10.0
+        sessionConfig.timeoutIntervalForRequest = 10.0
+        sessionConfig.timeoutIntervalForResource = 15.0
         sessionConfig.httpMaximumConnectionsPerHost = 1
         
         return URLSession(configuration: sessionConfig)
@@ -37,15 +34,21 @@ class ModelWrapper{
     
     // get the prediction result
     private var prediction: String = "" {
-        willSet(newValue){
-            // It's to delegate to viewController so that it can receive the event of value changed in order to update UI
-            delegate?.predictionWillChange(value: newValue)
+        didSet(newValue){
+//            ViewController.instance?.displayMessage(newValue, expirationTime: 3)
+            
+            NotificationCenter.default.post(name: ModelWrapper.predictionNotification,
+                                            object: self,
+                                            userInfo: [ModelWrapper.notificationUserInfo : self.prediction]
+            )
         }
     }
     
-    init(url:String, delegate:ModelWrapperDelegate) {
+    private var sceneView: ARSCNView
+    
+    init(url:String, sceneView: ARSCNView) {
         self.serverURL = url
-        self.delegate = delegate
+        self.sceneView = sceneView
     }
     
     // reset the chatId so we can have thoroughly new conversation
@@ -53,7 +56,7 @@ class ModelWrapper{
         chatId = ""
     }
     
-    func getPrediction(_ recordingContent:String, chatId:String){
+    func getPrediction(_ recordingContent:String){
         let baseURL = "\(serverURL)/GetNewAnswer"
         let postURL = URL(string: "\(baseURL)")
         

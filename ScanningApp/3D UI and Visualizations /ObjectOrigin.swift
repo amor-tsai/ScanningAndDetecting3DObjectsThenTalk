@@ -105,15 +105,15 @@ class ObjectOrigin: SCNNode {
     
     func adjustToExtent(_ extent: SIMD3<Float>?) {
         guard let extent = extent else {
-            self.simdScale = SIMD3<Float>(1.0)
-            xAxis.simdScale = SIMD3<Float>(1.0)
-            yAxis.simdScale = SIMD3<Float>(1.0)
-            zAxis.simdScale = SIMD3<Float>(1.0)
+            self.simdScale = SIMD3<Float>(repeating: 1.0)
+            xAxis.simdScale = SIMD3<Float>(repeating: 1.0)
+            yAxis.simdScale = SIMD3<Float>(repeating: 1.0)
+            zAxis.simdScale = SIMD3<Float>(repeating: 1.0)
             return
         }
         
         // By default the origin's scale is 1x.
-        self.simdScale = SIMD3<Float>(1.0)
+        self.simdScale = SIMD3<Float>(repeating: 1.0)
         
         // Compute a good scale for the axes based on the extent of the bouning box,
         // but stay within a reasonable range.
@@ -121,9 +121,9 @@ class ObjectOrigin: SCNNode {
         axesScale = max(min(axesScale, maxAxisSize), minAxisSize)
         
         // Adjust the scale of the axes (not the origin itself!)
-        xAxis.simdScale = SIMD3<Float>(axesScale)
-        yAxis.simdScale = SIMD3<Float>(axesScale)
-        zAxis.simdScale = SIMD3<Float>(axesScale)
+        xAxis.simdScale = SIMD3<Float>(repeating: axesScale)
+        yAxis.simdScale = SIMD3<Float>(repeating: axesScale)
+        zAxis.simdScale = SIMD3<Float>(repeating: axesScale)
         
         if let model = customModel {
             // Scale the origin such that the custom 3D model fits into the given extent.
@@ -131,7 +131,7 @@ class ObjectOrigin: SCNNode {
             let originScale = min(extent.x, extent.y, extent.z) / modelExtent
             
             // Scale the origin itself, so that the scale will be preserved in the *.arobject file.
-            self.simdScale = SIMD3<Float>(originScale)
+            self.simdScale = SIMD3<Float>(repeating: originScale)
             
             // Correct the scale of the axes to be the same size as before
             xAxis.simdScale *= (1 / originScale)
@@ -145,7 +145,7 @@ class ObjectOrigin: SCNNode {
         // of the origin. This ensures that the scale at which the 3D model is displayed
         // will be preserved in the *.arobject file.
         if isDisplayingCustom3DModel {
-            self.simdScale *= SIMD3<Float>(scale)
+            self.simdScale *= SIMD3<Float>(repeating: scale)
             
             // Correct the scale of the axes to be displayed at the same size as before.
             xAxis.simdScale *= (1 / scale)
@@ -222,7 +222,7 @@ class ObjectOrigin: SCNNode {
     func startPlaneDrag(screenPos: CGPoint) {
         // Reposition the origin in the XZ-plane.
         let dragPlane = self.simdWorldTransform
-        var offset = SIMD3<Float>(0)
+        var offset = SIMD3<Float>(repeating: 0)
         if let hitPos = sceneView.unprojectPoint(screenPos, ontoPlane: dragPlane) {
             offset = self.simdWorldPosition - hitPos
         }
@@ -281,7 +281,7 @@ class ObjectOrigin: SCNNode {
     var isOutsideBoundingBox: Bool {
         guard let boundingBox = self.parent as? BoundingBox else { return true }
         
-        let threshold = SIMD3<Float>(0.002)
+        let threshold = SIMD3<Float>(repeating: 0.002)
         let extent = boundingBox.extent + threshold
         
         let pos = simdPosition

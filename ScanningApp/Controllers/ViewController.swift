@@ -19,6 +19,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     static let appStateChangedNotification = Notification.Name("ApplicationStateChanged")
     static let appStateUserInfoKey = "AppState"
+    static let serverURL = "http://192.168.1.120:8000"
     
     static var instance: ViewController?
     
@@ -41,6 +42,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     internal var internalState: State = .startARSession
     
     internal var scan: Scan?
+    internal var modelWrapper: ModelWrapper?
     
     var referenceObjectToMerge: ARReferenceObject?
     var referenceObjectToTest: ARReferenceObject?
@@ -114,6 +116,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                                        name: ObjectOrigin.positionChangedNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(displayWarningIfInLowPowerMode),
                                        name: Notification.Name.NSProcessInfoPowerStateDidChange, object: nil)
+        
+        // handle voice over event
+        notificationCenter.addObserver(self, selector: #selector(voiceRecordingEnd), name: SpeechRecognizer.recordingEndNotification, object: nil)
+        
+        // handle chatbot response event
+        notificationCenter.addObserver(self, selector: #selector(displayChatbotResponse),
+                                       name: ModelWrapper.predictionNotification, object: nil)
         
         setupNavigationBar()
         
@@ -641,6 +650,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             let buttonTitle = "OK"
             self.showAlert(title: title, message: message, buttonTitle: buttonTitle, showCancel: false)
         }
+    }
+    
+    
+    @objc
+    func displayChatbotResponse(_ notification: Notification) {
+        guard self.state == .communicating, let _ = notification.object as? ModelWrapper else { return }
+        guard let response = notification.userInfo?[ModelWrapper.notificationUserInfo] as? String else { return }
+        
+        displayMessage(response, expirationTime: 3)
+    }
+    
+    @objc
+    func voiceRecordingEnd(_ notification: Notification) {
+        guard self.state == .communicating, let _ = notification.object as? SpeechRecognizer else { return }
+        guard let speech = notification.userInfo?[SpeechRecognizer.recordingEndUserInfo] as? String else { return }
+        
+        modelWrapper?.getPrediction(speech)
     }
     
     override var shouldAutorotate: Bool {

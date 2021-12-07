@@ -126,7 +126,7 @@ extension ViewController {
                 shareButton.setTitle("Share", for: [])
                 showMergeScanButton()
                 nextButton.isHidden = false
-                nextButton.isEnabled = false
+                nextButton.isEnabled = true
                 nextButton.setTitle("Communicate", for: [])
                 
                 testRun = TestRun(sceneView: sceneView)
@@ -141,7 +141,7 @@ extension ViewController {
                 shareButton.isHidden = true
                 speechButton.isHidden = false
                 speechRecognizer = SpeechRecognizer(sceneView: sceneView)
-                
+                modelWrapper = ModelWrapper(url: ViewController.serverURL, sceneView: sceneView)
                 
             }
             
