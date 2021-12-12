@@ -31,8 +31,9 @@ class SpeechButton: RoundedButton{
         clipsToBounds = true
         setTitleColor(.white, for: [])
         titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-        addTarget(self, action: #selector(holdDown), for: UIControl.Event.touchDown)
-        addTarget(self, action: #selector(holdRelease), for: UIControl.Event.touchUpInside)
+        toggledOn = false
+//        addTarget(self, action: #selector(holdDown), for: UIControl.Event.touchDown)
+//        addTarget(self, action: #selector(holdRelease), for: UIControl.Event.touchUpInside)
     }
     
     @objc func holdDown() {

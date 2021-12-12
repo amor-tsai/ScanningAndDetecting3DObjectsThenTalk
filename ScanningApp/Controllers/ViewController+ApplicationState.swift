@@ -127,7 +127,7 @@ extension ViewController {
                 shareButton.setTitle("Share", for: [])
                 showMergeScanButton()
                 nextButton.isHidden = false
-                nextButton.isEnabled = true
+                nextButton.isEnabled = false
                 nextButton.setTitle("Communicate", for: [])
                 
                 testRun = TestRun(sceneView: sceneView)
@@ -143,7 +143,7 @@ extension ViewController {
                 speechButton.isHidden = false
                 speechRecognizer = SpeechRecognizer(sceneView: sceneView)
                 modelWrapper = ModelWrapper(url: ViewController.serverURL, sceneView: sceneView)
-                displayInstruction(Message("long press the speech button to talk, when you are ready, release and tap the button once to issue"))
+                displayInstruction(Message("long press the speech button to talk, when you are ready, release and tap the button to issue"))
             }
             
             NotificationCenter.default.post(name: ViewController.appStateChangedNotification,

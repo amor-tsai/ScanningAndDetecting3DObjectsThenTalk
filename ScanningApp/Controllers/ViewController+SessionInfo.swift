@@ -11,6 +11,8 @@ import ARKit
 extension ViewController {
     
     func updateSessionInfoLabel(for trackingState: ARCamera.TrackingState) {
+        guard state != .communicating else { return }
+        
         // Update the UI to provide feedback on the state of the AR experience.
         var message: String = ""
         let stateString = state == .testing ? "Detecting" : "Scanning"
