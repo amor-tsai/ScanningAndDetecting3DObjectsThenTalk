@@ -93,6 +93,7 @@ extension ViewController {
                 sceneView.session.run(configuration, options: .resetTracking)
                 cancelMaxScanTimeTimer()
                 cancelMessageExpirationTimer()
+                modelWrapper?.resetChatId()// if back to start, chatId should be reset
             case .notReady:
                 print("State: Not ready to scan")
                 scan = nil
@@ -142,7 +143,7 @@ extension ViewController {
                 speechButton.isHidden = false
                 speechRecognizer = SpeechRecognizer(sceneView: sceneView)
                 modelWrapper = ModelWrapper(url: ViewController.serverURL, sceneView: sceneView)
-                
+                displayInstruction(Message("long press the speech button to talk, when you are ready, release and tap the button once to issue"))
             }
             
             NotificationCenter.default.post(name: ViewController.appStateChangedNotification,

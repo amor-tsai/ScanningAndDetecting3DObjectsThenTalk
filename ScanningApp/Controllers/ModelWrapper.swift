@@ -19,13 +19,16 @@ class ModelWrapper{
     private var serverURL = ""
     // this key is for authentication, it will be stored in the cookie
     private let passKey = "h7hdg43scbmdTRY7hbv321szxcdOPd2mz1"
+    
     // use chatId to identify if it's the same conversation
+    // at the first, I don't have conversation id, so I open a new conversation and get the chatId from server
+    // then I can use this chatId to continue the conversation before, which means chatbot could remember the context
     private var chatId = ""
     
     private var session: URLSession = {
         let sessionConfig = URLSessionConfiguration.ephemeral
         
-        sessionConfig.timeoutIntervalForRequest = 10.0
+        sessionConfig.timeoutIntervalForRequest = 15.0
         sessionConfig.timeoutIntervalForResource = 15.0
         sessionConfig.httpMaximumConnectionsPerHost = 1
         
@@ -35,8 +38,6 @@ class ModelWrapper{
     // get the prediction result
     private var prediction: String = "" {
         didSet(newValue){
-//            ViewController.instance?.displayMessage(newValue, expirationTime: 3)
-            
             NotificationCenter.default.post(name: ModelWrapper.predictionNotification,
                                             object: self,
                                             userInfo: [ModelWrapper.notificationUserInfo : self.prediction]

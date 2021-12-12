@@ -150,7 +150,7 @@ class SpeechRecognizer{
     func stop() {
         print("stopRecording ")
         pressDown = false
-        ViewController.instance?.displayMessage(self.spokenText, expirationTime: 10)
+        ViewController.instance?.displayMessage(self.spokenText, expirationTime: 4)
         NotificationCenter.default.post(name: SpeechRecognizer.recordingEndNotification,
                                         object: self,
                                         userInfo: [SpeechRecognizer.recordingEndUserInfo: self.spokenText]

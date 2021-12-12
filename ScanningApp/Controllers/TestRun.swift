@@ -111,11 +111,15 @@ class TestRun {
         cancelNoDetectionTimer()
         noDetectionTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
             self.cancelNoDetectionTimer()
-            ViewController.instance?.displayMessage("""
-                Unable to detect the object.
-                Please point the device at the scanned object, rescan or add another scan
-                of this object in the current environment.
-                """, expirationTime: 5.0)
+            // don't need to display this message if in the state of communication
+            if ViewController.instance?.state != .communicating {
+                ViewController.instance?.displayMessage("""
+                    Unable to detect the object.
+                    Please point the device at the scanned object, rescan or add another scan
+                    of this object in the current environment.
+                    """, expirationTime: 5.0)
+            }
+            
         }
     }
     

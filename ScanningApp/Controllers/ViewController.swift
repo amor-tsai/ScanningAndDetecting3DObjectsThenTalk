@@ -20,6 +20,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     static let appStateChangedNotification = Notification.Name("ApplicationStateChanged")
     static let appStateUserInfoKey = "AppState"
     static let serverURL = "http://192.168.1.120:8000"
+    static let messageDuration: Double = 4.0
     
     static var instance: ViewController?
     
@@ -508,7 +509,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let objectAnchor = anchor as? ARObjectAnchor {
+        if let objectAnchor = anchor as? ARObjectAnchor, self.state != .communicating {
             // ARObject is detected
             if let testRun = self.testRun, objectAnchor.referenceObject == testRun.referenceObject {
                 testRun.successfulDetection(objectAnchor)
@@ -658,7 +659,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         guard self.state == .communicating, let _ = notification.object as? ModelWrapper else { return }
         guard let response = notification.userInfo?[ModelWrapper.notificationUserInfo] as? String else { return }
         
-        displayMessage(response, expirationTime: 3)
+        displayMessage("bot: \(response)", expirationTime: ViewController.messageDuration)
     }
     
     @objc

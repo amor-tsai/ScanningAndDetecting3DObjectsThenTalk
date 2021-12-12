@@ -26,9 +26,9 @@ class SpeechButton: RoundedButton{
     }
     
     override func setup() {
-        backgroundColor = UIColor.white
+        backgroundColor = nil
         layer.cornerRadius = 8
-//        clipsToBounds = true
+        clipsToBounds = true
         setTitleColor(.white, for: [])
         titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
         addTarget(self, action: #selector(holdDown), for: UIControl.Event.touchDown)

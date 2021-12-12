@@ -9,6 +9,7 @@
 import UIKit
 import SceneKit
 
+// at first I intend to create a SCNText chat bubble, but after I saw the image from internet, I give up. I think using label is more readily to read.
 class SpeechBubble: SCNNode{
 
     var text:String? {
