@@ -127,7 +127,9 @@ extension ViewController {
                 shareButton.setTitle("Share", for: [])
                 showMergeScanButton()
                 nextButton.isHidden = false
-                nextButton.isEnabled = false
+                // set this to false, so open the constraint that once the object is detected, the chatbot is ready.
+                // set this to true, so skip this constraint
+                nextButton.isEnabled = true
                 nextButton.setTitle("Communicate", for: [])
                 
                 testRun = TestRun(sceneView: sceneView)

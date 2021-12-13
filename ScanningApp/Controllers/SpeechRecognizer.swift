@@ -148,12 +148,20 @@ class SpeechRecognizer{
     }
     
     func stop() {
+        // add this code to interlock the startRecording and stopRecording state
+        // otherwise, it'll be a disorder to display the reply message
+        guard pressDown == true && self.spokenText != "" else { return }
         print("stopRecording ")
         pressDown = false
-        ViewController.instance?.displayMessage(self.spokenText, expirationTime: 4)
+        // after issue a message, it should be set to "", otherwise the same message may send N times by misbutton
+        let message = self.spokenText
+        self.spokenText = ""
+        // display the user's speech
+        ViewController.instance?.displayMessage(message, expirationTime: 4)
+        
         NotificationCenter.default.post(name: SpeechRecognizer.recordingEndNotification,
                                         object: self,
-                                        userInfo: [SpeechRecognizer.recordingEndUserInfo: self.spokenText]
+                                        userInfo: [SpeechRecognizer.recordingEndUserInfo: message]
         )
     }
     
