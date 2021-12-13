@@ -31,12 +31,12 @@ class SpeechRecognizer{
     // The audio engine used to record input from the microphone.
     private let audioEngine = AVAudioEngine()
     
-    private var pressDown: Bool = false {
+    private var pressDown: Bool? {
         willSet(newValue){
             if newValue != pressDown {
-                if newValue {
+                if newValue == true {
                     startRecording()
-                } else {
+                } else if newValue == false {
                     stopRecording()
                 }
             }

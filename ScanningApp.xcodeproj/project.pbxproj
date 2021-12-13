@@ -16,7 +16,6 @@
 		310F58C5275B5BA900796460 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F58C4275B5BA900796460 /* ShareButton.swift */; };
 		310F58C9275DF49800796460 /* SpeechButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F58C8275DF49800796460 /* SpeechButton.swift */; };
 		310F58CB275E079D00796460 /* SpeechBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F58CA275E079D00796460 /* SpeechBubble.swift */; };
-		31B85D96276077F9009A9C6F /* blenderbot-400M-distill.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 31B85D95276077F9009A9C6F /* blenderbot-400M-distill.mlmodel */; };
 		31B85D98276521D9009A9C6F /* LocalModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B85D97276521D9009A9C6F /* LocalModelWrapper.swift */; };
 		390033E7206EE9F100C61E5D /* ObjectOrigin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390033E6206EE9F100C61E5D /* ObjectOrigin.swift */; };
 		390033F4206F143F00C61E5D /* ScannedPointCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390033F3206F143F00C61E5D /* ScannedPointCloud.swift */; };
@@ -60,7 +59,6 @@
 		310F58C4275B5BA900796460 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 		310F58C8275DF49800796460 /* SpeechButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechButton.swift; sourceTree = "<group>"; };
 		310F58CA275E079D00796460 /* SpeechBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubble.swift; sourceTree = "<group>"; };
-		31B85D95276077F9009A9C6F /* blenderbot-400M-distill.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "blenderbot-400M-distill.mlmodel"; sourceTree = "<group>"; };
 		31B85D97276521D9009A9C6F /* LocalModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalModelWrapper.swift; sourceTree = "<group>"; };
 		390033E6206EE9F100C61E5D /* ObjectOrigin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectOrigin.swift; sourceTree = "<group>"; };
 		390033F3206F143F00C61E5D /* ScannedPointCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedPointCloud.swift; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 			isa = PBXGroup;
 			children = (
 				1119C68220AA135700DDFCC2 /* README.md */,
-				31B85D95276077F9009A9C6F /* blenderbot-400M-distill.mlmodel */,
 				C479BF30201F84D70030C57A /* Controllers */,
 				C479BF31201F84EB0030C57A /* Views */,
 				11D4F6C220A1973300892189 /* Gesture Recognizers */,
@@ -335,7 +332,6 @@
 				C4B16A0820AF2DEE00BE6B5B /* FlashlightButton.swift in Sources */,
 				C47D1E1720B3763C00DC3FDE /* ViewController+SessionInfo.swift in Sources */,
 				390033FA206F15F700C61E5D /* Scan.swift in Sources */,
-				31B85D96276077F9009A9C6F /* blenderbot-400M-distill.mlmodel in Sources */,
 				C47FEA4E20888B83008C1749 /* ThresholdPinchGestureRecognizer.swift in Sources */,
 				310F58C5275B5BA900796460 /* ShareButton.swift in Sources */,
 				C47CE835207794880011A27B /* ObjectOriginAxis.swift in Sources */,
